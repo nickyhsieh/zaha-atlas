@@ -11,7 +11,7 @@
 <meta property="og:image" content="https://你的網域/og.png"> -->
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Noto+Sans+TC:wght@300;400;500;700&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#070B12;
@@ -90,6 +90,17 @@
   .bio-foot em{font-style:normal;color:var(--line)}
   .bio-close{position:absolute;top:14px;right:14px;display:none;background:rgba(7,11,18,.6);z-index:2}
   .bio-toggle{display:none}
+
+  /* ---------- colophon: 低調署名 ---------- */
+  .bio-credit{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--hair);
+    font-size:10px;letter-spacing:.1em;color:var(--muted);line-height:1.8;
+  }
+  .bio-credit .sig{
+    font-family:'Caveat',cursive;font-size:20px;letter-spacing:.02em;
+    color:var(--accent);display:inline-block;transform:rotate(-3deg);
+    margin-right:2px;
+  }
 
   @keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -233,6 +244,53 @@
     animation:fadeUp 1.2s ease both .9s;
   }
   .wall-toggle:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ---------- privacy / cookie notice ---------- */
+  .privacy-toggle{
+    position:fixed;left:32px;bottom:140px;z-index:6;
+    background:var(--surface);border:1px solid var(--hair);color:var(--muted);
+    font-family:'Syne',sans-serif;font-weight:700;font-size:10px;
+    letter-spacing:.25em;padding:11px 14px;cursor:pointer;
+    transition:border-color .25s,color .25s;
+    animation:fadeUp 1.2s ease both .9s;
+  }
+  .privacy-toggle:hover{border-color:var(--line);color:var(--ink)}
+  .privacy-body{max-width:640px;margin:0 auto;height:100%;padding:44px 32px 36px;display:flex;flex-direction:column;overflow-y:auto}
+  .privacy-head{display:flex;justify-content:space-between;align-items:flex-start;flex:0 0 auto}
+  .privacy-head .eyebrow{margin-bottom:8px}
+  .privacy-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(24px,3vw,34px);letter-spacing:.02em}
+  .privacy-text{margin-top:26px;font-size:13.5px;line-height:2;color:#cdd3dd;font-weight:300}
+  .privacy-text h3{
+    font-family:'Syne',sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent);margin-top:26px;margin-bottom:8px;
+  }
+  .privacy-text h3:first-of-type{margin-top:0}
+  .privacy-text ul{margin:8px 0 0 20px}
+  .privacy-text li{margin-bottom:6px}
+  .privacy-text a{color:var(--line)}
+  .privacy-text strong{color:var(--ink);font-weight:500}
+
+  /* ---------- first-visit notice banner ---------- */
+  .cookie-banner{
+    position:fixed;left:32px;right:32px;bottom:190px;z-index:25;
+    max-width:560px;
+    background:var(--surface);border:1px solid var(--hair);
+    padding:18px 20px;
+    opacity:0;transform:translateY(16px);pointer-events:none;
+    transition:opacity .4s ease,transform .4s ease;
+  }
+  .cookie-banner.show{opacity:1;transform:none;pointer-events:auto}
+  .cookie-banner p{font-size:12.5px;line-height:1.8;color:#cdd3dd;letter-spacing:.02em}
+  .cookie-banner .cb-actions{display:flex;gap:10px;margin-top:14px}
+  .cb-btn{
+    font-family:'Syne',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:.15em;
+    padding:10px 16px;cursor:pointer;border:1px solid var(--hair);background:none;color:var(--muted);
+    transition:border-color .2s,color .2s;
+  }
+  .cb-btn:hover{border-color:var(--line);color:var(--ink)}
+  .cb-btn.primary{background:var(--accent);border-color:var(--accent);color:#171008}
+  .cb-btn.primary:hover{filter:brightness(1.08);color:#171008}
+
   .wall{
     position:fixed;inset:0;z-index:20;
     background:rgba(5,8,14,.94);
@@ -318,9 +376,11 @@
       letter-spacing:.25em;padding:11px 14px;cursor:pointer;
     }
     .wall-toggle{left:16px;bottom:88px}
+    .privacy-toggle{left:16px;bottom:136px}
     .wall-inner{padding:24px 18px}
     .wall-grid{grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:18px}
     .wall-left{overflow:visible;flex:0 0 auto}
+    .cookie-banner{left:16px;right:16px;bottom:186px;max-width:none}
   }
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
@@ -369,6 +429,7 @@
   </div>
   <div class="bio-foot">
     <em>拖曳</em> 旋轉星球 · <em>滾輪/雙指</em> 縮放 · <em>點選光點</em> 查看作品
+    <div class="bio-credit"><span class="sig">Nicky Hsieh</span><br>非官方粉絲致敬網站,與 Zaha Hadid Architects 無關聯</div>
   </div>
 </section>
 <button class="bio-toggle" id="bio-toggle">ZAHA · 簡史</button>
@@ -404,6 +465,55 @@
       </div>
       <div class="wall-msgs" id="w-msgs"></div>
     </div>
+  </div>
+</div>
+
+<button class="privacy-toggle" id="privacy-toggle">🍪 隱私權與 Cookie</button>
+
+<div class="wall" id="privacy" aria-label="隱私權與 Cookie 說明">
+  <div class="privacy-body">
+    <div class="privacy-head">
+      <div>
+        <div class="eyebrow">Privacy &amp; Cookies</div>
+        <div class="privacy-title">隱私權與 Cookie<span style="color:var(--accent)">.</span></div>
+      </div>
+      <button class="close" id="privacy-close" aria-label="關閉">✕</button>
+    </div>
+    <div class="privacy-text">
+      <p>本站是粉絲致敬 Zaha Hadid 的非官方靜態網站,不販售商品、不置入廣告,也沒有安裝任何分析追蹤工具(例如 Google Analytics)。以下如實列出網站實際會用到、可能涉及你資料的地方。</p>
+
+      <h3>本站不設定 Cookie</h3>
+      <p>本站是純靜態頁面,沒有登入機制,不會在你的瀏覽器寫入任何屬於本站的 Cookie。</p>
+
+      <h3>瀏覽器本機儲存(localStorage)</h3>
+      <p>為了讓「投為最愛」「朝聖護照打卡」記得你的操作,本站會在你的瀏覽器裡存幾筆資料。這些資料只留在你自己的裝置上,我們讀不到、也不會上傳:</p>
+      <ul>
+        <li><strong>zha-my-vote / zha-visited</strong> — 你投過哪件作品、打卡過哪些作品</li>
+        <li><strong>zha-notice-ack</strong> — 你是否已經看過這份說明</li>
+      </ul>
+
+      <h3>你主動送出的內容</h3>
+      <p>在「TO ZAHA 留言牆」送出留言、投票,或打卡「我去過」時,那筆內容(留言文字、暱稱、選擇的作品)會被送到我們的 Google Apps Script 後端、寫進一份 Google 試算表,並<strong>公開顯示給所有訪客</strong>——這是本站設計上就會公開的內容,送出前請避免留下個人隱私資訊。</p>
+
+      <h3>第三方服務</h3>
+      <p>部分功能仰賴外部服務,載入時你的裝置(通常是 IP 位址)會依對方的隱私權政策被記錄,本站無法控制:</p>
+      <ul>
+        <li><strong>Google Fonts</strong>(網頁字型)— <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google 隱私權政策</a></li>
+        <li><strong>Google Apps Script / 試算表</strong>(留言牆、投票、打卡後端)— <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google 隱私權政策</a></li>
+        <li><strong>Wikimedia Commons / Wikipedia</strong>(部分作品照片即時抓取)— <a href="https://foundation.wikimedia.org/wiki/Policy:Privacy_policy" target="_blank" rel="noopener">Wikimedia 隱私權政策</a></li>
+      </ul>
+
+      <h3>沒有的東西</h3>
+      <p>本站沒有廣告、沒有分析追蹤、沒有社群媒體像素,也不會把任何資料賣給第三方。</p>
+    </div>
+  </div>
+</div>
+
+<div class="cookie-banner" id="cookie-banner">
+  <p>本站不設定 Cookie,但會用瀏覽器 localStorage 記住你的投票與打卡;送出留言/投票時,內容會公開存進我們的 Google 試算表。部分圖片與字型來自 Google Fonts、Wikimedia,載入時會依其政策傳送你的 IP。</p>
+  <div class="cb-actions">
+    <button class="cb-btn primary" id="cb-ack">知道了</button>
+    <button class="cb-btn" id="cb-detail">詳細說明</button>
   </div>
 </div>
 
@@ -1051,7 +1161,7 @@ $('p-close').onclick = closePanel;
 $('p-prev').onclick = ()=>select((selected-1+WORKS.length)%WORKS.length);
 $('p-next').onclick = ()=>select((selected+1)%WORKS.length);
 addEventListener('keydown', e=>{
-  if(e.key==='Escape'){ closePanel(); document.getElementById('wall').classList.remove('open'); }
+  if(e.key==='Escape'){ closePanel(); document.getElementById('wall').classList.remove('open'); document.getElementById('privacy').classList.remove('open'); }
   if(selected>=0 && e.key==='ArrowLeft')  $('p-prev').click();
   if(selected>=0 && e.key==='ArrowRight') $('p-next').click();
 });
@@ -1175,6 +1285,19 @@ document.getElementById('wall-toggle').onclick = async ()=>{
 };
 document.getElementById('w-close').onclick = ()=> wall.classList.remove('open');
 wall.addEventListener('click', e=>{ if(e.target===wall) wall.classList.remove('open'); });
+
+/* ---- privacy / cookie notice ---- */
+const privacy = document.getElementById('privacy');
+const cookieBanner = document.getElementById('cookie-banner');
+const ackNotice = ()=>{ try{ localStorage.setItem('zha-notice-ack','1'); }catch(e){} cookieBanner.classList.remove('show'); };
+document.getElementById('privacy-toggle').onclick = ()=> privacy.classList.add('open');
+document.getElementById('privacy-close').onclick = ()=> privacy.classList.remove('open');
+privacy.addEventListener('click', e=>{ if(e.target===privacy) privacy.classList.remove('open'); });
+document.getElementById('cb-ack').onclick = ackNotice;
+document.getElementById('cb-detail').onclick = ()=>{ privacy.classList.add('open'); ackNotice(); };
+try{
+  if(localStorage.getItem('zha-notice-ack')!=='1') setTimeout(()=>cookieBanner.classList.add('show'), 1400);
+}catch(e){}
 
 const fmtTime = ts=>{
   const d = new Date(ts);
