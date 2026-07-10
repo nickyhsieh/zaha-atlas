@@ -486,7 +486,8 @@ const WORKS = [
    img:'https://commons.wikimedia.org/wiki/Special:FilePath/Guangzhou_Opera_House_overview.JPG?width=900',
    desc:'「珠江邊的雙礫石」——如被江水長年沖刷的兩顆圓石。內部觀眾廳如洞穴般包裹,是她在中國的成名作,也開啟了此後十年的中國篇章。'},
   {en:'Sheikh Zayed Bridge', tc:'謝赫扎耶德大橋', city:'阿布達比 · 阿聯', year:2010, type:'橋樑', lat:24.453, lon:54.403,
-   wiki:['Sheikh Zayed Bridge'],
+   wiki:[],   // 'Sheikh Zayed Bridge' 英文維基無獨立條目,標題會 redirect 到 Zaha Hadid 本人條目——故意留空,避免 img 失效時備援抓到她的肖像照
+   img:'https://commons.wikimedia.org/wiki/Special:FilePath/Shore_view.jpg?width=900',
    desc:'拱形鋼構如沙丘波浪般起伏,夜間燈光沿拱線流動。被視為全球幾何最複雜的橋樑工程之一,把基礎設施做成了地景雕塑。'},
   {en:'Riverside Museum', tc:'河畔博物館', city:'格拉斯哥 · 英國', year:2011, type:'文化', lat:55.865, lon:-4.306,
    wiki:['Riverside Museum'],
@@ -535,7 +536,8 @@ const WORKS = [
    wiki:['One Thousand Museum'],
    desc:'GFRC 包覆的外骨骼如藤蔓攀附塔身,結構在外、空間在內。她在西半球最高的建成作品,亦是邁阿密天際線的新簽名。'},
   {en:'Changsha Meixihu Culture Centre', tc:'長沙梅溪湖國際文化藝術中心', city:'長沙 · 中國', year:2019, type:'文化', lat:28.190, lon:112.895,
-   wiki:['Meixihu International Culture and Art Centre','Changsha Meixihu International Culture and Art Centre'],
+   wiki:['Changsha Meixihu International Culture and Arts Centre'],   // 原本兩個候選標題都少打了 s(Art→Arts),兩個都 404
+   img:'https://commons.wikimedia.org/wiki/Special:FilePath/Changsha_Meixihu_International_Culture_Art_Centre_202110102.jpg?width=900',
    desc:'三朵芙蓉花瓣般的量體散落湖畔——大劇院、美術館、多功能廳各自獨立又彼此呼應,曲面 GRC 外牆如綢緞般連續。'},
   {en:'Danjiang Bridge', tc:'淡江大橋', city:'新北 · 台灣', year:2026, type:'橋樑', lat:25.177, lon:121.417,
    wiki:['Danjiang Bridge'],
