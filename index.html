@@ -1043,7 +1043,7 @@ addEventListener('keydown', e=>{
    TRIBUTE — shared messages, favourite votes, digital postcards
    Storage cascade: Claude artifact storage → GAS endpoint → local
 ============================================================ */
-const GAS_ENDPOINT = '';   // ← 部署到 Netlify 後,填入妳的 Google Apps Script Web App URL
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz8fA8aKPLvdQUQjNw_jccTw1XSVe1LeNjnOvBgc_bGh7vDkwiRjsz7ujRda8368Ysf/exec';
 
 const Store = (()=>{
   const art = typeof window.storage==='object' && window.storage && typeof window.storage.get==='function';
