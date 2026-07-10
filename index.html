@@ -486,11 +486,11 @@
       <p>本站是純靜態頁面,沒有登入機制,不會在你的瀏覽器寫入任何屬於本站的 Cookie。</p>
 
       <h3>瀏覽器本機儲存(localStorage)</h3>
-      <p>為了讓「投為最愛」「朝聖護照打卡」記得你的操作,本站會在你的瀏覽器裡存幾筆資料。這些資料只留在你自己的裝置上,我們讀不到、也不會上傳:</p>
+      <p>為了讓「投為最愛」「朝聖護照打卡」記得你的操作,本站會在你的瀏覽器裡存幾筆資料。這些資料只留在你自己的裝置上,我們讀不到、也不會上傳,且不會過期:</p>
       <ul>
         <li><strong>zha-my-vote / zha-visited</strong> — 你投過哪件作品、打卡過哪些作品</li>
-        <li><strong>zha-notice-ack</strong> — 你是否已經看過這份說明</li>
       </ul>
+      <p>另外用瀏覽器 <strong>sessionStorage</strong>(關閉分頁就清除,不是永久保存)記一筆 <strong>zha-notice-ack</strong>,只記「這個瀏覽階段你是否已看過這份說明」,下次重新開啟瀏覽器會再顯示一次。</p>
 
       <h3>你主動送出的內容</h3>
       <p>在「TO ZAHA 留言牆」送出留言、投票,或打卡「我去過」時,那筆內容(留言文字、暱稱、選擇的作品)會被送到我們的 Google Apps Script 後端、寫進一份 Google 試算表,並<strong>公開顯示給所有訪客</strong>——這是本站設計上就會公開的內容,送出前請避免留下個人隱私資訊。</p>
@@ -1289,14 +1289,14 @@ wall.addEventListener('click', e=>{ if(e.target===wall) wall.classList.remove('o
 /* ---- privacy / cookie notice ---- */
 const privacy = document.getElementById('privacy');
 const cookieBanner = document.getElementById('cookie-banner');
-const ackNotice = ()=>{ try{ localStorage.setItem('zha-notice-ack','1'); }catch(e){} cookieBanner.classList.remove('show'); };
+const ackNotice = ()=>{ try{ sessionStorage.setItem('zha-notice-ack','1'); }catch(e){} cookieBanner.classList.remove('show'); };
 document.getElementById('privacy-toggle').onclick = ()=> privacy.classList.add('open');
 document.getElementById('privacy-close').onclick = ()=> privacy.classList.remove('open');
 privacy.addEventListener('click', e=>{ if(e.target===privacy) privacy.classList.remove('open'); });
 document.getElementById('cb-ack').onclick = ackNotice;
 document.getElementById('cb-detail').onclick = ()=>{ privacy.classList.add('open'); ackNotice(); };
 try{
-  if(localStorage.getItem('zha-notice-ack')!=='1') setTimeout(()=>cookieBanner.classList.add('show'), 1400);
+  if(sessionStorage.getItem('zha-notice-ack')!=='1') setTimeout(()=>cookieBanner.classList.add('show'), 1400);
 }catch(e){}
 
 const fmtTime = ts=>{
