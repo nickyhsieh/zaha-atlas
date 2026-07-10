@@ -200,6 +200,7 @@
 
   /* ---------- panel actions (vote / postcard) ---------- */
   .p-actions{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border-top:1px solid var(--hair)}
+  .p-actions .act-btn:last-child:nth-child(odd){grid-column:1 / -1}
   .act-btn{
     background:rgba(10,15,24,.85);border:none;color:var(--ink);
     font-family:'Noto Sans TC',sans-serif;font-size:12px;letter-spacing:.1em;
@@ -438,7 +439,6 @@
     <button class="act-btn" id="p-vote">♡ 投為最愛</button>
     <button class="act-btn" id="p-check">📍 我去過 · 打卡</button>
     <button class="act-btn" id="p-card">⬇ 數位明信片</button>
-    <button class="act-btn" id="p-share">↗ 分享到社群</button>
   </div>
   <div class="panel-foot">
     <button class="nav-btn" id="p-prev">← 上一件</button>
@@ -1322,43 +1322,9 @@ const coordStr = w => Math.abs(w.lat).toFixed(3)+'\u00B0'+(w.lat>=0?'N':'S')+'  
 const ZH_QUOTE = '\u300C\u4E16\u754C\u6709 360 \u5EA6\u2014\u2014\u70BA\u4EC0\u9EBC\u53EA\u5B88\u8457\u5176\u4E2D\u4E00\u5EA6?\u300D';
 const ZH_MEMO  = 'DAME ZAHA HADID \u00B7 1950 \u2014 2016 \u00B7 IN MEMORIAM';
 
-async function buildPostcardCanvas(i, mode){
+async function buildPostcardCanvas(i){
   const w = WORKS[i];
   await loadCardFonts();
-
-  if(mode === 'story'){             /* 1080×1920 — IG 限動 */
-    const W=1080, H=1920;
-    const [c,g] = cardBase(W,H);
-    g.font='700 24px Syne, sans-serif'; g.fillStyle='#D9A35B';
-    g.fillText('Z A H A   H A D I D   A T L A S', 84, 110);
-    g.fillStyle='rgba(217,163,91,.5)'; g.fillRect(84,150,72,2);
-    g.font='800 230px Syne, sans-serif'; g.fillStyle='rgba(110,140,160,.07)';
-    g.fillText(String(i+1).padStart(2,'0'), W-350, 130);
-    g.fillStyle='#F2F0EC';
-    const enLines = wrapText(g, w.en.toUpperCase(), '800 84px Syne, sans-serif', 900);
-    let ty = 250; g.font='800 84px Syne, sans-serif';
-    enLines.forEach(l=>{ g.fillText(l,84,ty); ty+=96; });
-    g.font='500 46px "Noto Sans TC", sans-serif'; g.fillStyle='#cdd3dd';
-    g.fillText(w.tc, 84, ty+16); ty += 16+66;
-    g.font='300 26px "Noto Sans TC", sans-serif'; g.fillStyle='#8A94A6';
-    g.fillText(w.city+' \u00B7 '+w.year+' \u00B7 '+w.type, 84, ty+12);
-    const mx=84,my=880,mw=912,mh=456;
-    const P = drawWorldMap(g,mx,my,mw,mh);
-    crosshair(g,P,mx,my,mw,mh,w.lon,w.lat);
-    g.font='20px ui-monospace, Menlo, monospace'; g.fillStyle='#8A94A6';
-    g.fillText(coordStr(w), mx, my+mh+26);
-    g.textAlign='center';
-    g.font='300 30px "Noto Sans TC", sans-serif'; g.fillStyle='#9aa6b8';
-    g.fillText(ZH_QUOTE, W/2, 1600);
-    g.font='700 20px Syne, sans-serif'; g.fillStyle='#6E8CA0';
-    g.fillText(ZH_MEMO, W/2, 1672);
-    g.font='700 24px Syne, sans-serif'; g.fillStyle='#D9A35B';
-    g.fillText('#ZahaHadidAtlas', W/2, 1736);
-    g.textAlign='left';
-    g.strokeStyle='rgba(110,140,160,.28)'; g.lineWidth=1;
-    g.strokeRect(36,36,W-72,H-72);
-    return c;
-  }
 
   /* landscape 1280×800 — 桌面明信片 */
   const W=1280, H=800;
@@ -1395,7 +1361,7 @@ async function buildPostcardCanvas(i, mode){
 }
 
 async function makePostcard(i){
-  const c = await buildPostcardCanvas(i,'landscape');
+  const c = await buildPostcardCanvas(i);
   const a = document.createElement('a');
   a.download = 'ZHA-Atlas-'+WORKS[i].en.replace(/[^A-Za-z0-9]+/g,'-')+'.png';
   a.href = c.toDataURL('image/png');
@@ -1539,48 +1505,13 @@ document.getElementById('pp-card').onclick = async ()=>{
 };
 
 /* ============================================================
-   SHARE — Web Share API(含 IG 限動直式圖)+ 深度連結
+   URL SYNC — 深度連結 ?work=N
 ============================================================ */
-const shareBase = ()=> (location.origin && location.origin!=='null')
-  ? location.origin + location.pathname : '';
-
 function syncURL(i){
   try{
     history.replaceState(null, '', i===null ? location.pathname : location.pathname+'?work='+(i+1));
   }catch(e){}
 }
-
-document.getElementById('p-share').onclick = async ()=>{
-  if(selected<0) return;
-  const i = selected, w = WORKS[i];
-  const btn = document.getElementById('p-share');
-  btn.disabled = true; btn.textContent = '\u6E96\u5099\u5206\u4EAB\u2026';
-  const base = shareBase();
-  const url = base ? base+'?work='+(i+1) : '';
-  const text = '\u6211\u5728 ZAHA HADID ATLAS \u7684\u6700\u611B\uFF1A'+w.tc+'\uFF08'+w.year+' \u00B7 '+w.city+'\uFF09 #ZahaHadidAtlas';
-  let msg = '\u2197 \u5206\u4EAB\u5230\u793E\u7FA4';
-  try{
-    const cnv = await buildPostcardCanvas(i,'story');
-    const blob = await new Promise(res=>cnv.toBlob(res,'image/png'));
-    const file = new File([blob], 'zaha-atlas-'+(i+1)+'.png', {type:'image/png'});
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({files:[file], text: url ? text+' '+url : text});
-      msg = '\u2713 \u5DF2\u5206\u4EAB';
-    }else if(navigator.share){
-      await navigator.share({title:'ZAHA HADID ATLAS', text:text, url:url||undefined});
-      msg = '\u2713 \u5DF2\u5206\u4EAB';
-    }else{
-      if(url){ try{ await navigator.clipboard.writeText(url); }catch(e){} }
-      const a = document.createElement('a');
-      a.download = 'ZHA-Atlas-Story-'+(i+1)+'.png';
-      a.href = cnv.toDataURL('image/png');
-      a.click();
-      msg = '\u2713 \u9023\u7D50\u5DF2\u8907\u88FD \u00B7 \u9650\u52D5\u5716\u5DF2\u4E0B\u8F09';
-    }
-  }catch(e){ /* 使用者取消分享 */ }
-  btn.textContent = msg;
-  setTimeout(()=>{ btn.disabled=false; btn.textContent='\u2197 \u5206\u4EAB\u5230\u793E\u7FA4'; }, 2200);
-};
 
 /* ============================================================
    LOOP
@@ -1641,6 +1572,9 @@ requestAnimationFrame(loop);
   const n = parseInt(new URLSearchParams(location.search).get('work'), 10);
   if(!isNaN(n) && WORKS[n-1]) setTimeout(()=>select(n-1), 650);
 }catch(e){} })();
+
+/* ---- 明信片字型預熱:提早在背景載入,點「數位明信片/朝聖護照卡」時不用等字型 ---- */
+loadCardFonts();
 </script>
 </body>
 </html>
