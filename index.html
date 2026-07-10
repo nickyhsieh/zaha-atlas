@@ -991,7 +991,8 @@ function select(i){
   $('p-index').textContent = `№ ${pad(i+1)} / ${WORKS.length}`;
   $('p-en').textContent = w.en;
   $('p-name').textContent = w.tc;
-  $('p-city').textContent = w.city;
+  const cityParts = w.city.split(' · ');
+  $('p-city').innerHTML = cityParts.length===2 ? cityParts[0]+'<br>· '+cityParts[1] : w.city;
   $('p-year').textContent = w.year;
   $('p-type').textContent = w.type;
   $('p-desc').textContent = w.desc;
